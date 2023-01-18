@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.prettierrc.cjs
+.eslintrc.cjs
+.jest.confi.ts
+tsconfig.json
