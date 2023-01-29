@@ -12,6 +12,10 @@
     "prepare": "husky install",
     "preinstall": "npx only-allow pnpm"
   },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=7"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
