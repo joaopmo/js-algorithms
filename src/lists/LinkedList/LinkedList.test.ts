@@ -18,6 +18,18 @@ test('the list string representation contains all items', () => {
   expect(list.toString()).toBe('[a, b, c, 1, 2, 3]');
 });
 
+test('create list from array with from()', () => {
+  const list = LinkedList.from(['a', 'b', 'c', 1, 2, 3]);
+  expect(list).toHaveLength(6);
+  expect(list.toString()).toBe('[a, b, c, 1, 2, 3]');
+});
+
+test('create list from array with from() and mapFn', () => {
+  const list = LinkedList.from([1, 2, 3], (item) => item * 2);
+  expect(list).toHaveLength(3);
+  expect(list.toString()).toBe('[2, 4, 6]');
+});
+
 describe('add and remove methods', () => {
   let list: LinkedList<string | number>;
   beforeEach(() => {
@@ -65,6 +77,71 @@ describe('add and remove methods', () => {
     expect(removedItem).toBe('a');
     expect(list.toString()).toBe('[b, c, 1, 2, 3]');
   });
+
+  test('adds an item to the end of the list with splice()', () => {
+    const removedItems = list.splice(list.length, 0, 42);
+    expect(removedItems).toHaveLength(0);
+    expect(list).toHaveLength(7);
+    expect(list.toString()).toBe('[a, b, c, 1, 2, 3, 42]');
+  });
+
+  test('adds multiple items to the end of the list with splice()', () => {
+    const removedItems = list.splice(list.length, 0, 42, 'Hello', 'World', '!');
+    expect(removedItems).toHaveLength(0);
+    expect(list).toHaveLength(10);
+    expect(list.toString()).toBe('[a, b, c, 1, 2, 3, 42, Hello, World, !]');
+  });
+
+  test('remove item from end of list wiht splice()', () => {
+    const removedItems = list.splice(-1, 1);
+    expect(removedItems).toHaveLength(1);
+    expect(list).toHaveLength(5);
+    expect(removedItems[0]).toBe(3);
+    expect(list.toString()).toBe('[a, b, c, 1, 2]');
+  });
+
+  test('adds an item to the front of the list with splice()', () => {
+    const removedItems = list.splice(0, 0, 42);
+    expect(removedItems).toHaveLength(0);
+    expect(list).toHaveLength(7);
+    expect(list.toString()).toBe('[42, a, b, c, 1, 2, 3]');
+  });
+
+  test('adds multiple items to the front of the list with splice()', () => {
+    const removedItems = list.splice(0, 0, 42, 'Hello', 'World', '!');
+    expect(removedItems).toHaveLength(0);
+    expect(list).toHaveLength(10);
+    expect(list.toString()).toBe('[42, Hello, World, !, a, b, c, 1, 2, 3]');
+  });
+
+  test('remove item from end of list wiht splice()', () => {
+    const removedItems = list.splice(0, 1);
+    expect(removedItems).toHaveLength(1);
+    expect(list).toHaveLength(5);
+    expect(removedItems[0]).toBe('a');
+    expect(list.toString()).toBe('[b, c, 1, 2, 3]');
+  });
+
+  test('adds an item to the middle of the list with splice()', () => {
+    const removedItems = list.splice(3, 0, 42);
+    expect(removedItems).toHaveLength(0);
+    expect(list).toHaveLength(7);
+    expect(list.toString()).toBe('[a, b, c, 42, 1, 2, 3]');
+  });
+
+  test('adds multiple items to the middle of the list with splice()', () => {
+    const removedItems = list.splice(3, 0, 42, 'Hello', 'World', '!');
+    expect(removedItems).toHaveLength(0);
+    expect(list).toHaveLength(10);
+    expect(list.toString()).toBe('[a, b, c, 42, Hello, World, !, 1, 2, 3]');
+  });
+
+  test('adds multiple items to the middle of the list removing one single item with splice()', () => {
+    const removedItems = list.splice(3, 1, 42, 'Hello', 'World', '!');
+    expect(removedItems).toHaveLength(1);
+    expect(list).toHaveLength(9);
+    expect(list.toString()).toBe('[a, b, c, 42, Hello, World, !, 2, 3]');
+  });
 });
 
 describe('accessor methods', () => {
@@ -81,6 +158,15 @@ describe('accessor methods', () => {
   test('access item with bracket notation', () => {
     expect(list[0]).toBe('a');
     expect(list[-2]).toBe(2);
+  });
+
+  test('find index with findIndex()', () => {
+    let index = list.findIndex((item) => item === 1);
+    expect(index).toBe(3);
+    index = list.findIndex((_, idx, list) => list[idx] === 'c');
+    expect(index).toBe(2);
+    index = list.findIndex(() => false);
+    expect(index).toBe(undefined);
   });
 
   test('assign existing item with set()', () => {
